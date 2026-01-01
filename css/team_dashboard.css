@@ -1,0 +1,164 @@
+@import url("blue-theme.css");
+
+.admin-dashboard-container {
+  padding: 0;
+}
+
+.admin-dashboard-container > .row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.admin-main-content {
+  padding: 30px;
+  background: #f8f9fa;
+  min-height: calc(100vh - 70px);
+}
+
+.dashboard-header {
+  background: white;
+  border-radius: 15px;
+  padding: 30px;
+  margin-bottom: 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border-left: 5px solid var(--secondary-blue);
+}
+
+.page-title {
+  color: var(--primary-blue);
+  font-size: 32px;
+  font-weight: 600;
+  margin: 0 0 10px 0;
+}
+
+.page-subtitle {
+  color: #7f8c8d;
+  font-size: 16px;
+  margin: 0;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.stat-info h3 {
+  color: var(--primary-blue);
+  font-size: 28px;
+  font-weight: 600;
+  margin: 0 0 5px 0;
+}
+
+.stat-info p {
+  color: #7f8c8d;
+  font-size: 14px;
+  margin: 0;
+}
+
+.task-status-chart {
+  background: white;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.chart-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.chart-row:last-child {
+  margin-bottom: 0;
+}
+
+.chart-label {
+  width: 120px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.chart-label.pending {
+  color: #e74c3c;
+}
+
+.chart-label.in-progress {
+  color: #f39c12;
+}
+
+.chart-label.completed {
+  color: #27ae60;
+}
+
+@media (max-width: 768px) {
+  .dashboard-header {
+    padding: 20px;
+  }
+
+  .page-title {
+    font-size: 24px;
+  }
+
+  .stats-row {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .chart-label {
+    width: 100%;
+  }
+
+  .chart-bar {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-header {
+    padding: 15px;
+  }
+
+  .page-title {
+    font-size: 20px;
+  }
+
+  .stat-card {
+    padding: 20px;
+  }
+
+  .stat-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+  }
+
+  .stat-info h3 {
+    font-size: 24px;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.admin-main-content {
+  animation: fadeIn 0.6s ease-out;
+}

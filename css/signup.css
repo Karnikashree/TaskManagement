@@ -1,0 +1,171 @@
+:root {
+  --primary-blue: #2c3e50;
+  --secondary-blue: #3498db;
+  --accent-blue: #2980b9;
+  --light-blue: #ecf0f1;
+  --dark-blue: #1a252f;
+  --gradient-blue: linear-gradient(135deg, #2c3e50 0%, #4a6491 100%);
+  --gradient-light: linear-gradient(135deg, #e3f2fd 0%, #f8fdff 100%);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", "Inter", sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--gradient-blue);
+  color: white;
+  padding: 20px;
+  overflow-x: hidden;
+}
+
+.container {
+  width: 100%;
+  max-width: 400px;
+  animation: fadeIn 1.2s ease-out;
+  padding: 0;
+}
+
+.signup-card {
+  background: white;
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  border: none;
+  color: var(--primary-blue);
+}
+
+.logo-section {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.logo-section h1 {
+  font-size: 2rem;
+  margin-bottom: 5px;
+  color: var(--primary-blue);
+  font-weight: 700;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.input-with-icon {
+  position: relative;
+}
+
+.input-with-icon i {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #95a5a6;
+  font-size: 16px;
+  transition: color 0.3s;
+}
+
+.input-with-icon .toggle-password {
+  position: absolute;
+  left: auto;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #95a5a6;
+  font-size: 16px;
+  cursor: pointer;
+  transition: color 0.3s;
+  z-index: 10;
+}
+
+.toggle-password:hover {
+  color: var(--secondary-blue);
+}
+
+.input-with-icon input {
+  width: 100%;
+  padding: 12px 40px 12px 45px;
+  background: #f8f9fa;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 15px;
+  color: var(--primary-blue);
+  transition: all 0.3s ease;
+}
+
+.auth-btn {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  background: var(--secondary-blue);
+  color: white;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(52, 152, 219, 0.2);
+  margin-top: 10px;
+}
+
+.auth-btn:hover {
+  background: var(--accent-blue);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(52, 152, 219, 0.3);
+}
+
+.auth-btn:active {
+  transform: translateY(0);
+}
+
+.btn-loading.hidden {
+  display: none;
+}
+
+.login-footer {
+  text-align: center;
+  margin-top: 25px;
+  font-size: 14px;
+}
+
+.login-footer p {
+  margin: 5px 0;
+  color: #7f8c8d;
+}
+
+.login-footer a {
+  color: var(--secondary-blue);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s;
+}
+
+.login-footer a:hover {
+  color: var(--accent-blue);
+  text-decoration: underline;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 480px) {
+  .signup-card {
+    padding: 30px 20px;
+  }
+}

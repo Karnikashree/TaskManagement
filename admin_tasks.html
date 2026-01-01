@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasks | Admin Panel</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/admin_tasks.css">
+    <link rel="stylesheet" href="css/toast.css" />
+</head>
+
+<body>
+    <!-- Blue Theme Navbar -->
+    <nav class="navbar navbar-main navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="admin_dashboard.html" id="nav-brand">
+                    <i class="fa fa-tasks"></i>
+                    <span id="team-title">Team Admin</span>
+                </a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <!-- Projects dropdown moved to user dropdown -->
+                    <li>
+                        <div class="user-dropdown">
+                            <div class="user-avatar" id="user-avatar">U</div>
+                            <div class="user-info" id="user-info">Admin</div>
+                        </div>
+                    </li>
+                    <!-- Member View button moved to user dropdown -->
+                    <li><button class="logout-btn" onclick="logout()"><i class="fa fa-sign-out"></i> Logout</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Admin Layout with Sidebar -->
+    <!-- Admin Layout with Sidebar -->
+    <div class="container-fluid admin-dashboard-container">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-sm-3 col-md-2 admin-sidebar">
+                <div class="sidebar-header">
+                    <h3><i class="fa fa-cog"></i> Admin Panel</h3>
+                    <div class="team-id-section">
+                        <p class="team-id-label">Team ID:</p>
+                        <div class="team-id-display">
+                            <code id="team-id-display">Loading...</code>
+                            <button class="btn-copy-id" onclick="copyTeamId()" title="Copy Team ID">
+                                <i class="fa fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <ul class="nav nav-sidebar">
+                    <li><a href="admin_dashboard.html" id="nav-dashboard"><i class="fa fa-dashboard"></i> Dashboard</a>
+                    </li>
+                    <li class="active"><a href="admin_tasks.html" id="nav-tasks"><i class="fa fa-tasks"></i> Tasks</a>
+                    </li>
+                    <li><a href="admin_members.html" id="nav-members"><i class="fa fa-users"></i> Members</a></li>
+                </ul>
+
+                <div class="sidebar-footer">
+                    <a href="lobby.html" class="btn-back-to-lobby">
+                        <i class="fa fa-home"></i> Back to Lobby
+                    </a>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <!-- Main Content -->
+            <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 admin-main-content">
+                <!-- Page Header -->
+                <div class="page-header">
+                    <h1 class="page-title"><i class="fa fa-tasks"></i> Task Management</h1>
+                    <div class="page-actions">
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#createTaskModal">
+                            <i class="fa fa-plus"></i> New Task
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stats Row -->
+                <div class="stats-row">
+                    <div class="stat-card total-tasks">
+                        <div class="stat-icon">
+                            <i class="fa fa-tasks"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="total-count">0</h3>
+                            <p>Total Tasks</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card pending-tasks">
+                        <div class="stat-icon">
+                            <i class="fa fa-clock-o"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="pending-count">0</h3>
+                            <p>Pending</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card in-progress-tasks">
+                        <div class="stat-icon">
+                            <i class="fa fa-spinner"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="in-progress-count">0</h3>
+                            <p>In Progress</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card completed-tasks">
+                        <div class="stat-icon">
+                            <i class="fa fa-check-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="completed-count">0</h3>
+                            <p>Completed</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Task Filters -->
+                <div class="task-filters">
+                    <div class="filter-group">
+                        <label for="filter-status">Status:</label>
+                        <select class="form-control filter-select" id="filter-status">
+                            <option value="all">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="filter-assignee">Assignee:</label>
+                        <select class="form-control filter-select" id="filter-assignee">
+                            <option value="all">All Members</option>
+                            <option value="unassigned">Unassigned</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="filter-priority">Priority:</label>
+                        <select class="form-control filter-select" id="filter-priority">
+                            <option value="all">All Priorities</option>
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+
+                    <button class="btn btn-default" onclick="clearFilters()">
+                        <i class="fa fa-times"></i> Clear Filters
+                    </button>
+                </div>
+
+                <!-- Task Board Removed -->
+
+                <!-- Task List View -->
+                <div class="section-header">
+                    <h2><i class="fa fa-list"></i> All Tasks</h2>
+                    <!-- View toggle removed -->
+                </div>
+
+                <div class="task-list-view" id="task-list-view">
+                    <table class="table task-list-table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Description</th>
+                                <th>Assignee</th>
+                                <th>Status</th>
+                                <th>Priority</th>
+                                <th>Due Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="task-list-body">
+                            <!-- Task list will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Task Modal -->
+    <div class="modal fade" id="createTaskModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title"><i class="fa fa-plus-circle"></i> Create New Task</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="create-task-form">
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input type="text" class="form-control" id="task-title" required
+                                placeholder="Enter task title">
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea class="form-control" id="task-desc" rows="3"
+                                placeholder="Enter task description"></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="task-assignee">Assigned To</label>
+                                    <select class="form-control" id="task-assignee">
+                                        <option value="">Unassigned</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="task-priority">Priority</label>
+                                    <select class="form-control" id="task-priority">
+                                        <option value="low">Low</option>
+                                        <option value="medium" selected>Medium</option>
+                                        <option value="high">High</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="task-due-date">Due Date</label>
+                                    <input type="date" class="form-control" id="task-due-date">
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fa fa-check"></i> Create Task
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Task Modal -->
+    <div class="modal fade" id="editTaskModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title"><i class="fa fa-edit"></i> Edit Task</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="edit-task-form">
+                        <input type="hidden" id="edit-task-id">
+                        <div class="form-group">
+                            <label for="edit-task-title">Title</label>
+                            <input type="text" class="form-control" id="edit-task-title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-task-desc">Description</label>
+                            <textarea class="form-control" id="edit-task-desc" rows="3"></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="edit-task-assignee">Assigned To</label>
+                                    <select class="form-control" id="edit-task-assignee">
+                                        <option value="">Unassigned</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="edit-task-priority">Priority</label>
+                                    <select class="form-control" id="edit-task-priority">
+                                        <option value="low">Low</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="high">High</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="edit-task-due-date">Due Date</label>
+                                    <input type="date" class="form-control" id="edit-task-due-date">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="edit-task-status">Status</label>
+                                    <select class="form-control" id="edit-task-status">
+                                        <option value="pending">Pending</option>
+                                        <option value="in-progress">In Progress</option>
+                                        <option value="completed">Completed</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fa fa-save"></i> Save Changes
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/admin_tasks.js"></script>
+</body>
+
+</html>

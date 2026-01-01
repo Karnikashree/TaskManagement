@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Members | Admin Panel</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link rel="stylesheet" href="css/admin_members.css" />
+    <link rel="stylesheet" href="css/toast.css" />
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-main navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button
+            type="button"
+            class="navbar-toggle collapsed"
+            data-toggle="collapse"
+            data-target="#navbar-collapse"
+            aria-expanded="false"
+          >
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="admin_dashboard.html" id="nav-brand">
+            <i class="fa fa-tasks"></i>
+            <span id="team-title">Team Admin</span>
+          </a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <!-- Projects dropdown moved to user dropdown -->
+            <li>
+              <div class="user-dropdown">
+                <div class="user-avatar" id="user-avatar">U</div>
+                <div class="user-info" id="user-info">Admin</div>
+              </div>
+            </li>
+            <!-- Member View button moved to user dropdown -->
+            <li>
+              <button class="logout-btn" onclick="logout()">
+                <i class="fa fa-sign-out"></i> Logout
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Admin Layout with Sidebar -->
+    <div class="container-fluid admin-dashboard-container">
+      <div class="row">
+        <!-- Sidebar -->
+        <div class="col-sm-3 col-md-2 admin-sidebar">
+          <div class="sidebar-header">
+            <h3><i class="fa fa-cog"></i> Admin Panel</h3>
+            <div class="team-id-section">
+              <p class="team-id-label">Team ID:</p>
+              <div class="team-id-display">
+                <code id="team-id-display">Loading...</code>
+                <button
+                  class="btn-copy-id"
+                  onclick="copyTeamId()"
+                  title="Copy Team ID"
+                >
+                  <i class="fa fa-copy"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <ul class="nav nav-sidebar">
+            <li>
+              <a href="admin_dashboard.html" id="nav-dashboard"
+                ><i class="fa fa-dashboard"></i> Dashboard</a
+              >
+            </li>
+            <li>
+              <a href="admin_tasks.html" id="nav-tasks"
+                ><i class="fa fa-tasks"></i> Tasks</a
+              >
+            </li>
+            <li class="active">
+              <a href="admin_members.html" id="nav-members"
+                ><i class="fa fa-users"></i> Members</a
+              >
+            </li>
+          </ul>
+
+          <div class="sidebar-footer">
+            <a href="lobby.html" class="btn-back-to-lobby">
+              <i class="fa fa-home"></i> Back to Lobby
+            </a>
+          </div>
+        </div>
+
+        <!-- Main Content -->
+        <div
+          class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 admin-main-content"
+        >
+          <div class="page-header">
+            <h1 class="page-title"><i class="fa fa-users"></i> Team Members</h1>
+            <div class="page-actions">
+              <button
+                class="btn btn-success"
+                data-toggle="modal"
+                data-target="#addMemberModal"
+              >
+                <i class="fa fa-user-plus"></i> Add Member
+              </button>
+            </div>
+          </div>
+
+          <!-- Members Stats -->
+          <div class="members-stats">
+            <div class="stat-item">
+              <h3 id="total-members">0</h3>
+              <p>Total Members</p>
+            </div>
+            <div class="stat-item">
+              <h3 id="admin-count">0</h3>
+              <p>Admins</p>
+            </div>
+            <div class="stat-item">
+              <h3 id="member-count">0</h3>
+              <p>Members</p>
+            </div>
+            <div class="stat-item">
+              <h3 id="active-count">0</h3>
+              <p>Active Today</p>
+            </div>
+          </div>
+
+          <!-- Members Filter -->
+          <div class="row">
+            <div class="col-md-4 col-sm-6">
+              <div class="input-group">
+                <span class="input-group-addon"
+                  ><i class="fa fa-search"></i
+                ></span>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="member-search-input"
+                  placeholder="Search members..."
+                  onkeyup="searchMembers()"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Members Table -->
+          <div class="members-table-container">
+            <table class="members-table">
+              <thead>
+                <tr>
+                  <th>Member</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Joined</th>
+                  <th>Tasks Assigned</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="members-table-body">
+                <!-- Members will be loaded here -->
+                <tr>
+                  <td colspan="6" class="text-center">Loading members...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Member Modal -->
+    <div class="modal fade" id="addMemberModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+              &times;
+            </button>
+            <h4 class="modal-title">
+              <i class="fa fa-user-plus"></i> Add Team Member
+            </h4>
+          </div>
+          <div class="modal-body">
+            <form id="add-member-form">
+              <div class="form-group">
+                <label for="new-member-select">Select User to Add</label>
+                <select
+                  class="form-control"
+                  id="new-member-select"
+                  title="Select User to Add"
+                >
+                  <option value="">Loading available users...</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-success btn-block">
+                <i class="fa fa-plus"></i> Add User to Team
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reassign Tasks Modal -->
+    <div class="modal fade" id="reassignModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+              &times;
+            </button>
+            <h4 class="modal-title">
+              <i class="fa fa-exchange"></i> Remove Member & Reassign Tasks
+            </h4>
+          </div>
+          <div class="modal-body">
+            <div class="alert alert-warning">
+              <i class="fa fa-exclamation-triangle"></i>
+              This user has
+              <strong
+                ><span id="reassign-task-count">0</span> pending tasks</strong
+              >.
+            </div>
+            <p>Who should take over their tasks?</p>
+            <form id="reassign-form">
+              <input type="hidden" id="reassign-remove-uid" />
+              <div class="form-group">
+                <label for="reassign-select">New Owner</label>
+                <select
+                  class="form-control"
+                  id="reassign-select"
+                  title="Select New Owner"
+                  required
+                >
+                  <!-- options loaded via JS -->
+                </select>
+              </div>
+              <button type="submit" class="btn btn-danger btn-block">
+                <i class="fa fa-trash"></i> Confirm Removal
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/admin_members.js"></script>
+  </body>
+</html>

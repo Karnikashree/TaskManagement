@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Team Member</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/team_dashboard.css">
+    <link rel="stylesheet" href="css/toast.css" />
+</head>
+
+<body>
+    <!-- Blue Theme Navbar -->
+    <nav class="navbar navbar-main navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="team_dashboard.html" id="nav-brand">
+                    <i class="fa fa-tasks"></i>
+                    <span id="team-title">Team Member</span>
+                </a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <div class="user-dropdown">
+                            <div class="user-avatar" id="user-avatar">U</div>
+                            <div class="user-info" id="user-info">Member</div>
+                        </div>
+                    </li>
+                    <!-- No Member View toggle for members -->
+                    <li><button class="logout-btn" onclick="logout()"><i class="fa fa-sign-out"></i> Logout</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Admin Layout with Sidebar -->
+    <div class="container-fluid admin-dashboard-container">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-sm-3 col-md-2 admin-sidebar">
+                <div class="sidebar-header">
+                    <h3><i class="fa fa-user"></i> Member Panel</h3>
+                    <!-- Team ID Removed -->
+                </div>
+
+                <ul class="nav nav-sidebar">
+                    <li class="active"><a href="team_dashboard.html" id="nav-dashboard"><i class="fa fa-dashboard"></i>
+                            Dashboard</a>
+                    </li>
+                    <li><a href="team_tasks.html" id="nav-tasks"><i class="fa fa-tasks"></i> My Tasks</a>
+                    </li>
+                    <li><a href="team_members.html" id="nav-members"><i class="fa fa-users"></i> Team</a></li>
+                </ul>
+
+                <div class="sidebar-footer">
+                    <a href="lobby.html" class="btn-back-to-lobby">
+                        <i class="fa fa-home"></i> Back to Lobby
+                    </a>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <!-- Main Content -->
+            <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 admin-main-content">
+                <!-- Dashboard Header -->
+                <div class="dashboard-header">
+                    <h1 class="page-title"><i class="fa fa-laptop"></i> My Workspace</h1>
+                    <p class="page-subtitle">Welcome to your personal team dashboard</p>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="stats-row">
+                    <div class="stat-card total-tasks">
+                        <div class="stat-icon">
+                            <i class="fa fa-tasks"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="my-active-count">0</h3>
+                            <p>My Active Tasks</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card pending-tasks">
+                        <div class="stat-icon">
+                            <i class="fa fa-clock-o"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="my-pending-count">0</h3>
+                            <p>My Pending</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card completion-rate">
+                        <div class="stat-icon">
+                            <i class="fa fa-check-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="my-completed-count">0</h3>
+                            <p>My Completed</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card active-members">
+                        <div class="stat-icon">
+                            <i class="fa fa-percent"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="my-completion-rate">0%</h3>
+                            <p>My Completion Rate</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions & Recent Activity Removed -->
+
+                <!-- Task Status Overview -->
+                <div class="section-header">
+                    <h2><i class="fa fa-chart-pie"></i> Task Status Overview</h2>
+                </div>
+
+                <div class="task-status-chart">
+                    <div class="chart-row">
+                        <div class="chart-label pending">
+                            <span>Pending</span>
+                            <span id="chart-pending">0</span>
+                        </div>
+                        <div class="chart-bar">
+                            <div class="chart-fill pending" id="chart-fill-pending"></div>
+                        </div>
+                    </div>
+
+                    <div class="chart-row">
+                        <div class="chart-label in-progress">
+                            <span>In Progress</span>
+                            <span id="chart-progress">0</span>
+                        </div>
+                        <div class="chart-bar">
+                            <div class="chart-fill in-progress" id="chart-fill-progress"></div>
+                        </div>
+                    </div>
+
+                    <div class="chart-row">
+                        <div class="chart-label completed">
+                            <span>Completed</span>
+                            <span id="chart-completed">0</span>
+                        </div>
+                        <div class="chart-bar">
+                            <div class="chart-fill completed" id="chart-fill-completed"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Quick Create Modal Removed -->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/team_dashboard.js"></script>
+</body>
+
+</html>
