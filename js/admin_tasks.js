@@ -100,30 +100,6 @@ function loadMemberViewButton() {
   }
 }
 
-window.deleteTask = async function (id) {
-  if (!confirm("Delete this task?")) return;
-  const { error } = await supabase.from("tasks").delete().eq("id", id);
-  if (error) {
-    showToast("Error deleting", "error");
-    return;
-  }
-  showToast("Task deleted", "success");
-  loadTasks();
-};
-
-window.openEditTaskModal = function (task) {
-  document.getElementById("edit-task-id").value = task.id;
-  document.getElementById("edit-task-title").value = task.title;
-  document.getElementById("edit-task-desc").value = task.description || "";
-  document.getElementById("edit-task-priority").value =
-    task.priority || "medium";
-  document.getElementById("edit-task-status").value = task.status;
-  document.getElementById("edit-task-due-date").value = task.due_date || "";
-  document.getElementById("edit-task-assignee").value = task.assigned_to || "";
-
-  $("#editTaskModal").modal("show");
-};
-
 function updateUserInterface() {
   const email = currentUser.email;
   const fullName = currentUser?.user_metadata?.full_name || email.split("@")[0];
@@ -264,6 +240,30 @@ function renderListView(tasks) {
     tbody.appendChild(tr);
   });
 }
+
+window.deleteTask = async function (id) {
+  if (!confirm("Delete this task?")) return;
+  const { error } = await supabase.from("tasks").delete().eq("id", id);
+  if (error) {
+    showToast("Error deleting", "error");
+    return;
+  }
+  showToast("Task deleted", "success");
+  loadTasks();
+};
+
+window.openEditTaskModal = function (task) {
+  document.getElementById("edit-task-id").value = task.id;
+  document.getElementById("edit-task-title").value = task.title;
+  document.getElementById("edit-task-desc").value = task.description || "";
+  document.getElementById("edit-task-priority").value =
+    task.priority || "medium";
+  document.getElementById("edit-task-status").value = task.status;
+  document.getElementById("edit-task-due-date").value = task.due_date || "";
+  document.getElementById("edit-task-assignee").value = task.assigned_to || "";
+
+  $("#editTaskModal").modal("show");
+};
 
 function getStatusColor(status) {
   if (status === "pending") return "warning";

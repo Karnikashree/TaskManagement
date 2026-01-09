@@ -52,28 +52,35 @@ async function loadAdminProjectsDropdown() {
     } = await supabase.auth.getUser();
     if (!user) return;
 
-    const { data: memberships, error } = await supabase
+    const { data: memberships, error: memError } = await supabase
       .from("team_members")
-      .select(
-        `
-                team_id,
-                teams:team_id(id, name)
-            `
-      )
+      .select("team_id")
       .eq("user_id", user.id)
-      .eq("role", "admin")
-      .order("name", { foreignTable: "teams" });
+      .eq("role", "admin");
+
+    if (memError) throw memError;
+
+    if (!memberships || memberships.length === 0) {
+      dropdown.innerHTML = '<li><a href="#">No projects found</a></li>';
+      return;
+    }
+
+    const teamIds = memberships.map((m) => m.team_id);
+
+    const { data: teams, error } = await supabase
+      .from("teams")
+      .select("id, name")
+      .in("id", teamIds)
+      .order("name");
 
     if (error) throw error;
 
     dropdown.innerHTML = "";
 
-    memberships.forEach((m) => {
-      if (m.teams) {
-        const li = document.createElement("li");
-        li.innerHTML = `<a href="admin_dashboard.html?teamId=${m.teams.id}">${m.teams.name}</a>`;
-        dropdown.appendChild(li);
-      }
+    teams.forEach((team) => {
+      const li = document.createElement("li");
+      li.innerHTML = `<a href="admin_dashboard.html?teamId=${team.id}">${team.name}</a>`;
+      dropdown.appendChild(li);
     });
   } catch (e) {
     console.error("Error loading projects dropdown:", e);
@@ -175,9 +182,12 @@ async function loadMembers() {
       tbody.appendChild(tr);
     });
   } catch (e) {
-    console.error(e);
-    tbody.innerHTML =
-      '<tr><td colspan="6" class="text-danger">Error loading members</td></tr>';
+    console.error("Error loading members:", e);
+    const msg =
+      e.code === "500" || e.status === 500
+        ? "Server Error (500). Please run the 'fix_rls_policies.sql' script in Supabase."
+        : "Error loading members";
+    tbody.innerHTML = `<tr><td colspan="6" class="text-danger">${msg}</td></tr>`;
   }
 }
 

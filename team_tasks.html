@@ -1,165 +1,193 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tasks | Team Member</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="css/team_tasks.css">
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link rel="stylesheet" href="css/team_tasks.css" />
     <link rel="stylesheet" href="css/toast.css" />
-</head>
+  </head>
 
-<body>
-    <!-- Blue Theme Navbar -->
+  <body>
+    <!-- Navbar -->
     <nav class="navbar navbar-main navbar-fixed-top">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                    data-target="#navbar-collapse" aria-expanded="false">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="team_dashboard.html" id="nav-brand">
-                    <i class="fa fa-tasks"></i>
-                    <span id="team-title">Team Member</span>
-                </a>
-            </div>
-
-            <div class="collapse navbar-collapse" id="navbar-collapse">
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <div class="user-dropdown">
-                            <div class="user-avatar" id="user-avatar">U</div>
-                            <div class="user-info" id="user-info">Member</div>
-                        </div>
-                    </li>
-                    <!-- No Member View toggle -->
-                    <li><button class="logout-btn" onclick="logout()"><i class="fa fa-sign-out"></i> Logout</button>
-                    </li>
-                </ul>
-            </div>
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button
+            type="button"
+            class="navbar-toggle collapsed"
+            data-toggle="collapse"
+            data-target="#navbar-collapse"
+            aria-expanded="false"
+          >
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="team_dashboard.html" id="nav-brand">
+            <i class="fa fa-tasks"></i>
+            <span id="team-title">Team Member</span>
+          </a>
         </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li>
+              <div class="user-dropdown">
+                <div class="user-avatar" id="user-avatar">U</div>
+                <div class="user-info" id="user-info">Member</div>
+              </div>
+            </li>
+            <!-- No Member View toggle -->
+            <li>
+              <button class="logout-btn" onclick="logout()">
+                <i class="fa fa-sign-out"></i> Logout
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
     </nav>
 
     <!-- Admin Layout with Sidebar -->
-    <!-- Admin Layout with Sidebar -->
     <div class="container-fluid admin-dashboard-container">
-        <div class="row">
-            <!-- Sidebar -->
-            <div class="col-sm-3 col-md-2 admin-sidebar">
-                <div class="sidebar-header">
-                    <h3><i class="fa fa-user"></i> Member Panel</h3>
-                    <!-- Team ID Removed -->
-                </div>
+      <div class="row">
+        <!-- Sidebar -->
+        <div class="col-sm-3 col-md-2 admin-sidebar">
+          <div class="sidebar-header">
+            <h3><i class="fa fa-user"></i> Member Panel</h3>
+          </div>
 
-                <ul class="nav nav-sidebar">
-                    <li><a href="team_dashboard.html" id="nav-dashboard"><i class="fa fa-dashboard"></i> Dashboard</a>
-                    </li>
-                    <li class="active"><a href="team_tasks.html" id="nav-tasks"><i class="fa fa-tasks"></i> My
-                            Tasks</a>
-                    </li>
-                    <li><a href="team_members.html" id="nav-members"><i class="fa fa-users"></i> Team</a></li>
-                </ul>
+          <ul class="nav nav-sidebar">
+            <li>
+              <a href="team_dashboard.html" id="nav-dashboard"
+                ><i class="fa fa-dashboard"></i> Dashboard</a
+              >
+            </li>
+            <li class="active">
+              <a href="team_tasks.html" id="nav-tasks"
+                ><i class="fa fa-tasks"></i> My Tasks</a
+              >
+            </li>
+            <li>
+              <a href="team_members.html" id="nav-members"
+                ><i class="fa fa-users"></i> Team</a
+              >
+            </li>
+          </ul>
 
-                <div class="sidebar-footer">
-                    <a href="lobby.html" class="btn-back-to-lobby">
-                        <i class="fa fa-home"></i> Back to Lobby
-                    </a>
-                </div>
-            </div>
-
-            <!-- Main Content -->
-            <!-- Main Content -->
-            <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 admin-main-content">
-                <!-- Page Header -->
-                <div class="page-header">
-                    <h1 class="page-title"><i class="fa fa-tasks"></i> My Tasks</h1>
-                    <div class="page-actions">
-                    </div>
-                </div>
-
-                <!-- Task Filters -->
-                <div class="task-filters">
-                    <div class="row">
-                        <div class="col-md-12 text-right">
-                            <!-- Status & Priority Filters -->
-                            <div class="form-inline">
-                                <select class="form-control input-sm" id="filter-status" title="Filter by Status">
-                                    <option value="all">All Status</option>
-                                    <option value="pending">Pending</option>
-                                    <option value="in-progress">In Progress</option>
-                                    <option value="completed">Completed</option>
-                                </select>
-                                <select class="form-control input-sm" id="filter-priority" title="Filter by Priority">
-                                    <option value="all">All Priorities</option>
-                                    <option value="high">High</option>
-                                    <option value="medium">Medium</option>
-                                    <option value="low">Low</option>
-                                </select>
-                                <button class="btn btn-default btn-sm" onclick="clearFilters()">
-                                    <i class="fa fa-times"></i> Clear
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- My Tasks Section -->
-                <div class="section-header">
-                    <h2><i class="fa fa-user"></i> My Tasks</h2>
-                </div>
-                <div class="task-list-view mb-4" id="my-tasks-list-view">
-                    <table class="table task-list-table">
-                        <thead>
-                            <tr>
-                                <th>Title</th>
-                                <th>Description</th>
-                                <th>Status</th>
-                                <th>Priority</th>
-                                <th>Due Date</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="my-task-list-body">
-                            <!-- My tasks will be loaded here -->
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Divider -->
-                <hr class="task-divider">
-
-                <!-- Other Team Tasks Section -->
-                <div class="section-header">
-                    <h2><i class="fa fa-users"></i> Other's Tasks</h2>
-                </div>
-                <div class="task-list-view" id="team-tasks-list-view">
-                    <table class="table task-list-table">
-                        <thead>
-                            <tr>
-                                <th>Title</th>
-                                <th>Description</th>
-                                <th>Assignee</th>
-                                <th>Status</th>
-                                <th>Priority</th>
-                                <th>Due Date</th>
-                            </tr>
-                        </thead>
-                        <tbody id="team-task-list-body">
-                            <!-- Team tasks will be loaded here -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+          <div class="sidebar-footer">
+            <a href="lobby.html" class="btn-back-to-lobby">
+              <i class="fa fa-home"></i> Back to Lobby
+            </a>
+          </div>
         </div>
+
+        <!-- Main Content -->
+        <div
+          class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 admin-main-content"
+        >
+          <!-- Page Header -->
+          <div class="page-header">
+            <h1 class="page-title"><i class="fa fa-tasks"></i> My Tasks</h1>
+            <div class="page-actions"></div>
+          </div>
+
+          <!-- Task Filters -->
+          <div class="task-filters">
+            <div class="row">
+              <div class="col-md-12 text-right">
+                <!-- Status & Priority Filters -->
+                <div class="form-inline">
+                  <select
+                    class="form-control input-sm"
+                    id="filter-status"
+                    title="Filter by Status"
+                  >
+                    <option value="all">All Status</option>
+                    <option value="pending">Pending</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="completed">Completed</option>
+                  </select>
+                  <select
+                    class="form-control input-sm"
+                    id="filter-priority"
+                    title="Filter by Priority"
+                  >
+                    <option value="all">All Priorities</option>
+                    <option value="high">High</option>
+                    <option value="medium">Medium</option>
+                    <option value="low">Low</option>
+                  </select>
+                  <button
+                    class="btn btn-default btn-sm"
+                    onclick="clearFilters()"
+                  >
+                    <i class="fa fa-times"></i> Clear
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- My Tasks Section -->
+          <div class="section-header">
+            <h2><i class="fa fa-user"></i> My Tasks</h2>
+          </div>
+          <div class="task-list-view mb-4" id="my-tasks-list-view">
+            <table class="table task-list-table">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Description</th>
+                  <th>Status</th>
+                  <th>Priority</th>
+                  <th>Due Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="my-task-list-body">
+                <!-- My tasks will be loaded here -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Divider -->
+          <hr class="task-divider" />
+
+          <!-- Other Team Tasks Section -->
+          <div class="section-header">
+            <h2><i class="fa fa-users"></i> Other's Tasks</h2>
+          </div>
+          <div class="task-list-view" id="team-tasks-list-view">
+            <table class="table task-list-table">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Description</th>
+                  <th>Assignee</th>
+                  <th>Status</th>
+                  <th>Priority</th>
+                  <th>Due Date</th>
+                </tr>
+              </thead>
+              <tbody id="team-task-list-body">
+                <!-- Team tasks will be loaded here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
-
-
-    <!-- Edit Task Modal Removed (Inline editing implemented) -->
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -168,6 +196,5 @@
     <script src="js/utils.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/team_tasks.js"></script>
-</body>
-
+  </body>
 </html>

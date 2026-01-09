@@ -60,8 +60,7 @@ async function loadAdminProjectsDropdown() {
             `
       )
       .eq("user_id", user.id)
-      .eq("role", "admin")
-      .order("name", { foreignTable: "teams" });
+      .eq("role", "admin");
 
     if (error) throw error;
 

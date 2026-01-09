@@ -13,6 +13,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
+  // Check membership and payment status
+  const { data: member, error: memberError } = await supabase
+    .from("team_members")
+    .select("role, payment_status")
+    .eq("team_id", currentTeamId)
+    .eq("user_id", currentUser.id)
+    .single();
+
+  if (memberError || !member) {
+    window.location.href = "lobby.html";
+    return;
+  }
+
+  if (member.payment_status === 'pending') {
+    alert("Payment required to access this team. Please complete payment in the lobby.");
+    window.location.href = "lobby.html";
+    return;
+  }
+
   updateUserInterface();
   updateSidebarLinks();
   loadTeamDetails();
@@ -112,9 +131,7 @@ async function loadDashboardStats() {
     const myTasks = tasks.filter((t) => t.assigned_to === currentUser.id);
     const myTotal = myTasks.length;
     const myPending = myTasks.filter((t) => t.status === "pending").length;
-    const myInProgress = myTasks.filter(
-      (t) => t.status === "in-progress"
-    ).length;
+    const myInProgress = myTasks.filter((t) => t.status === "in-progress").length;
     const myCompleted = myTasks.filter((t) => t.status === "completed").length;
     const myActive = myPending + myInProgress;
 

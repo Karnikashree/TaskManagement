@@ -105,32 +105,14 @@ async function loadMembers() {
     )?.role;
     const isAdmin = currentUserRole === "admin";
 
-    if (isAdmin) {
-      const theadRow = document.querySelector(".members-table thead tr");
-      if (theadRow && !theadRow.querySelector(".actions-header")) {
-        const th = document.createElement("th");
-        th.className = "actions-header";
-        th.textContent = "Actions";
-        theadRow.appendChild(th);
-      }
-    }
-
     tbody.innerHTML = "";
+
     members.forEach((m) => {
       const taskCount = tasks.filter((t) => t.assigned_to === m.user_id).length;
       const name = m.profiles.full_name || "N/A";
       const email = m.profiles.email;
 
-      if (isAdmin) {
-        if (m.user_id === currentUser.id) {
-          actionsHtml = '<td><span class="text-muted">It\'s You</span></td>';
-        } else {
-          actionsHtml = `
-                        <td>
-                            <button class="btn btn-xs btn-danger" onclick="removeMember('${m.user_id}')" title="Remove"><i class="fa fa-times"></i></button>
-                        </td>`;
-        }
-      }
+
       const tr = document.createElement("tr");
       tr.innerHTML = `
                 <td>
@@ -139,9 +121,8 @@ async function loadMembers() {
                     </div>
                 </td>
                 <td>${email}</td>
-                <td><span class="label label-${
-                  m.role === "admin" ? "primary" : "default"
-                }">${m.role}</span></td>
+                <td><span class="label label-${m.role === "admin" ? "primary" : "default"
+        }">${m.role}</span></td>
                 <td>${new Date(m.joined_at).toLocaleDateString()}</td>
                 <td>${taskCount}</td>
             `;

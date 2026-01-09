@@ -2,150 +2,192 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Team Lobby | Task Manager</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="css/dashboard.css">
-    <link rel="stylesheet" href="css/toast.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Team Lobby | Task Manager</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="stylesheet" href="css/toast.css" />
 </head>
 
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-main navbar-fixed-top">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                    data-target="#navbar-collapse" aria-expanded="false">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">
-                    <i class="fa fa-tasks"></i>
-                    Team Task Manager
-                </a>
+  <!-- Navbar -->
+  <nav class="navbar navbar-main navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse"
+          aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">
+          <i class="fa fa-tasks"></i>
+          Team Task Manager
+        </a>
+      </div>
+
+      <div class="collapse navbar-collapse" id="navbar-collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li>
+            <div class="user-dropdown">
+              <div class="user-avatar" id="user-avatar">U</div>
+              <div class="user-info" id="user-info">Loading...</div>
             </div>
+          </li>
+          <li>
+            <button class="logout-btn" onclick="logout()">
+              <i class="fa fa-sign-out"></i> Logout
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-            <div class="collapse navbar-collapse" id="navbar-collapse">
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <div class="user-dropdown">
-                            <div class="user-avatar" id="user-avatar">U</div>
-                            <div class="user-info" id="user-info">Loading...</div>
-                        </div>
-                    </li>
-                    <li><button class="logout-btn" onclick="logout()"><i class="fa fa-sign-out"></i> Logout</button>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
-    <div class="container dashboard-container">
-        <div class="welcome-card">
-            <h1 class="welcome-title" id="welcome-title">Welcome to Team Task Manager</h1>
-            <p class="welcome-subtitle" id="welcome-subtitle">Collaborate efficiently with your team members</p>
-        </div>
-
-        <!-- Quick Actions Section -->
-        <div class="action-section">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="action-card" data-toggle="modal" data-target="#createTeamModal" id="create-team-card">
-                        <h3>Create New Team</h3>
-                        <button class="btn btn-action btn-create">Create Team</button>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="action-card" data-toggle="modal" data-target="#joinTeamModal">
-                        <h3>Join Existing Team</h3>
-                        <button class="btn btn-action btn-join">Join Team</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Waiting Status -->
-        <div class="waiting-card" id="waiting-status">
-            <div class="fa fa-refresh fa-spin spinner-large"></div>
-            <h3>Waiting to be Added</h3>
-            <p>You are not currently in any teams. Please ask your administrator to add you directly, or join using a
-                Team ID.</p>
-            <p class="small text-muted">
-                <i class="fa fa-info-circle"></i> Checking for updates...
-            </p>
-        </div>
-
-        <!-- Your Teams Section -->
-        <div class="teams-section">
-            <h2 class="section-title">Your Teams</h2>
-            <div class="team-grid" id="team-list-container">
-            </div>
-        </div>
+  <!-- Main Content -->
+  <div class="container dashboard-container">
+    <div class="welcome-card">
+      <h1 class="welcome-title" id="welcome-title">
+        Welcome to Team Task Manager
+      </h1>
+      <p class="welcome-subtitle" id="welcome-subtitle">
+        Collaborate efficiently with your team members
+      </p>
     </div>
 
-    <!-- Join Team Modal -->
-    <div class="modal fade" id="joinTeamModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title"><i class="fa fa-users"></i> Join Existing Team</h4>
-                </div>
-                <div class="modal-body">
-                    <form id="join-team-form">
-                        <div class="form-group">
-                            <label for="join-team-id">Team ID</label>
-                            <input type="text" class="form-control" id="join-team-id" required
-                                placeholder="Enter Team ID ">
-                            <small class="text-muted">
-                                <i class="fa fa-info-circle"></i> Get the Team ID from your team administrator
-                            </small>
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-block btn-lg">
-                            <i class="fa fa-sign-in"></i> Join Team
-                        </button>
-                    </form>
-                </div>
-            </div>
+    <!-- Quick Actions Section -->
+    <div class="action-section">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="action-card" data-toggle="modal" data-target="#createTeamModal" id="create-team-card">
+            <h3>Create New Team</h3>
+            <button class="btn btn-action btn-create">Create Team</button>
+          </div>
         </div>
+        <div class="col-md-6">
+          <div class="action-card" data-toggle="modal" data-target="#joinTeamModal">
+            <h3>Join Existing Team</h3>
+            <button class="btn btn-action btn-join">Join Team</button>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- Create Team Modal -->
-    <div class="modal fade" id="createTeamModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title"><i class="fa fa-plus-circle"></i> Create New Team</h4>
-                </div>
-                <div class="modal-body">
-                    <form id="create-team-form">
-                        <div class="form-group">
-                            <label for="team-name">Team Name</label>
-                            <input type="text" class="form-control" id="team-name" required
-                                placeholder="Enter your team name">
-                        </div>
-                        <button type="submit" class="btn btn-success btn-block btn-lg">
-                            <i class="fa fa-rocket"></i> Create Team
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
+    <!-- Waiting Status -->
+    <div class="waiting-card" id="waiting-status">
+      <div class="fa fa-refresh fa-spin spinner-large"></div>
+      <h3>Waiting to be Added</h3>
+      <p>
+        You are not currently in any teams. Please ask your administrator to
+        add you directly, or join using a Team ID.
+      </p>
+      <p class="small text-muted">
+        <i class="fa fa-info-circle"></i> Checking for updates...
+      </p>
     </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-    <script src="js/config.js"></script>
-    <script src="js/utils.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/dashboard.js"></script>
+    <!-- Your Teams Section -->
+    <div class="teams-section">
+      <h2 class="section-title">Your Teams</h2>
+      <div class="team-grid" id="team-list-container"></div>
+    </div>
+  </div>
+
+  <!-- Join Team Modal -->
+  <div class="modal fade" id="joinTeamModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+          <h4 class="modal-title">
+            <i class="fa fa-users"></i> Join Existing Team
+          </h4>
+        </div>
+        <div class="modal-body">
+          <form id="join-team-form">
+            <div class="form-group">
+              <label for="join-team-id">Team ID</label>
+              <input type="text" class="form-control" id="join-team-id" required placeholder="Enter Team ID " />
+              <small class="text-muted">
+                <i class="fa fa-info-circle"></i> Get the Team ID from your
+                team administrator
+              </small>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block btn-lg">
+              <i class="fa fa-sign-in"></i> Join Team
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Team Modal -->
+  <div class="modal fade" id="createTeamModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+          <h4 class="modal-title">
+            <i class="fa fa-plus-circle"></i> Create New Team
+          </h4>
+        </div>
+        <div class="modal-body">
+          <form id="create-team-form">
+            <div class="form-group">
+              <label for="team-name">Team Name</label>
+              <input type="text" class="form-control" id="team-name" required placeholder="Enter your team name" />
+            </div>
+            <button type="submit" class="btn btn-success btn-block btn-lg">
+              <i class="fa fa-rocket"></i> Create Team
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment Modal -->
+  <div class="modal fade" id="paymentModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <i class="fa fa-credit-card"></i> Payment Required
+          </h4>
+        </div>
+        <div class="modal-body text-center">
+          <div class="fa fa-lock" style="font-size: 48px; color: #f1c40f; margin-bottom: 20px;"></div>
+          <h3>Start Your Subscription</h3>
+          <p>To join this team, please pay the first month's subscription of <strong>₹5</strong>.</p>
+          <p class="small text-muted">This will activate your access.</p>
+          <hr>
+          <button id="pay-now-btn" class="btn btn-success btn-lg btn-block">
+            Pay ₹5 Subscription
+          </button>
+          <p class="small text-muted" style="margin-top: 10px;">
+            Secured by Razorpay
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/dashboard.js"></script>
 </body>
 
 </html>

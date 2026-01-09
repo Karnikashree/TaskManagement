@@ -1,5 +1,8 @@
 let currentUser = null;
 let pollerId = null;
+let pendingTeamId = null;
+const RAZORPAY_KEY_ID = "rzp_test_S0etRYVS11gZ19";
+const RAZORPAY_PLAN_ID = "plan_S0x21VAJ3k5buj";
 
 document.addEventListener("DOMContentLoaded", async () => {
   currentUser = await checkAuth();
@@ -139,43 +142,6 @@ function startInvitePoller() {
   }, 4000);
 }
 
-async function enterTeam(teamId, knownRole = null) {
-  try {
-    let role = knownRole;
-
-    if (!role) {
-      const { data: member, error } = await supabase
-        .from("team_members")
-        .select("role")
-        .eq("team_id", teamId)
-        .eq("user_id", currentUser.id)
-        .single();
-
-      if (error) throw error;
-      if (member) role = member.role;
-    }
-
-    if (role === "admin") {
-      window.location.href = `admin_dashboard.html?teamId=${teamId}`;
-    } else {
-      window.location.href = `team_dashboard.html?teamId=${teamId}`;
-    }
-  } catch (error) {
-    if (error.code === "PGRST116") {
-      console.warn(
-        "Member not found in team_members, defaulting to member view or retrying...",
-        error
-      );
-
-      window.location.href = `team_dashboard.html?teamId=${teamId}`;
-      return;
-    }
-
-    console.error("Error entering team:", error);
-    alert(`Unable to enter team: ${error.message || "Unknown error"}`);
-  }
-}
-
 document
   .getElementById("create-team-form")
   .addEventListener("submit", async (e) => {
@@ -200,13 +166,18 @@ document
 
       if (error) throw error;
 
-      $("#createTeamModal").modal("hide");
-      showToast("Team created successfully", "success");
-
-      document.getElementById("team-name").value = "";
-
       if (data && data[0]) {
-        setTimeout(() => enterTeam(data[0].id, "admin"), 100); // reduced delay
+        await supabase
+          .from("team_members")
+          .update({ payment_status: "paid" })
+          .eq("team_id", data[0].id)
+          .eq("user_id", currentUser.id);
+
+        $("#createTeamModal").modal("hide");
+        showToast("Team created successfully", "success");
+
+        document.getElementById("team-name").value = "";
+        setTimeout(() => enterTeam(data[0].id, "admin"), 500);
       }
     } catch (error) {
       console.error("Error creating team:", error);
@@ -231,6 +202,7 @@ document
           team_id: teamId,
           user_id: currentUser.id,
           role: "member",
+          payment_status: "pending",
         },
       ]);
 
@@ -241,7 +213,7 @@ document
 
       document.getElementById("join-team-id").value = "";
 
-      setTimeout(() => enterTeam(teamId, "member"), 100);
+      setTimeout(() => enterTeam(teamId), 100);
     } catch (error) {
       console.error("Error joining team:", error);
 
@@ -273,8 +245,158 @@ document
     }
   });
 
+async function enterTeam(teamId, knownRole = null) {
+  try {
+    let role = knownRole;
+
+    if (!role) {
+      const { data: member, error } = await supabase
+        .from("team_members")
+        .select("role, payment_status")
+        .eq("team_id", teamId)
+        .eq("user_id", currentUser.id)
+        .single();
+
+      if (error) throw error;
+      if (member) {
+        role = member.role;
+        if (member.payment_status === "pending") {
+          pendingTeamId = teamId;
+          $("#paymentModal").modal("show");
+          return;
+        }
+      }
+    }
+
+    if (role === "admin") {
+      window.location.href = `admin_dashboard.html?teamId=${teamId}`;
+    } else {
+      window.location.href = `team_dashboard.html?teamId=${teamId}`;
+    }
+  } catch (error) {
+    if (error.code === "PGRST116") {
+      console.warn(
+        "Member not found in team_members, defaulting to member view or retrying...",
+        error
+      );
+
+      window.location.href = `team_dashboard.html?teamId=${teamId}`;
+      return;
+    }
+
+    console.error("Error entering team:", error);
+    alert(`Unable to enter team: ${error.message || "Unknown error"}`);
+  }
+}
+
 window.addEventListener("beforeunload", () => {
   if (pollerId) {
     clearInterval(pollerId);
   }
 });
+
+document.getElementById("pay-now-btn").addEventListener("click", async () => {
+  if (!pendingTeamId) return;
+
+  if (!window.Razorpay) {
+    showToast("Razorpay SDK not loaded. Please refresh.", "error");
+    return;
+  }
+
+  const payBtn = document.getElementById("pay-now-btn");
+  const originalText = payBtn.textContent;
+  payBtn.textContent = "Creating Subscription...";
+  payBtn.disabled = true;
+
+  const subscriptionId = await createSubscriptionViaEdgeFunction(
+    RAZORPAY_PLAN_ID
+  );
+
+  if (!subscriptionId) {
+    payBtn.textContent = originalText;
+    payBtn.disabled = false;
+    return;
+  }
+
+  const options = {
+    key: RAZORPAY_KEY_ID,
+    subscription_id: subscriptionId,
+    name: "Team Task Manager",
+    description: "Monthly Subscription (₹5/month)",
+    image: "https://cdn-icons-png.flaticon.com/512/476/476863.png",
+    handler: async function (response) {
+      console.log("Subscription Success:", response);
+      showToast("Subscription Active! Verifying...", "info");
+
+      try {
+        const { error } = await supabase
+          .from("team_members")
+          .update({
+            payment_status: "paid",
+            subscription_id: response.razorpay_subscription_id,
+            plan_id: RAZORPAY_PLAN_ID,
+            payment_method: "razorpay_subscription_edge",
+          })
+          .eq("team_id", pendingTeamId)
+          .eq("user_id", currentUser.id);
+
+        if (error) throw error;
+
+        $("#paymentModal").modal("hide");
+        showToast("Welcome to the team!", "success");
+        enterTeam(pendingTeamId);
+      } catch (err) {
+        console.error("Error updating payment status:", err);
+        showToast(
+          "Subscription active but update failed. Contact support.",
+          "error"
+        );
+      } finally {
+        payBtn.textContent = originalText;
+        payBtn.disabled = false;
+      }
+    },
+    prefill: {
+      name: currentUser?.user_metadata?.full_name || "",
+      email: currentUser?.email || "",
+    },
+    theme: {
+      color: "#337ab7",
+    },
+  };
+
+  const rzp1 = new Razorpay(options);
+  rzp1.on("payment.failed", function (response) {
+    console.error(response.error);
+    showToast("Payment Failed: " + response.error.description, "error");
+    payBtn.textContent = originalText;
+    payBtn.disabled = false;
+  });
+
+  rzp1.open();
+});
+
+async function createSubscriptionViaEdgeFunction(planId) {
+  try {
+    const { data, error } = await supabase.functions.invoke(
+      "create-subscription",
+      {
+        body: { plan_id: planId },
+      }
+    );
+
+    if (error) throw error;
+
+    return data.subscription_id;
+  } catch (error) {
+    console.error("Subscription Creation Failed:", error);
+    if (error.message.includes("FunctionsFetchError")) {
+      alert(
+        "Edge Function Error: Ensure you have deployed the function 'create-subscription'.\n\nFallback: Check console for more details."
+      );
+    } else {
+      showToast("Error creating subscription: " + error.message, "error");
+    }
+    return null;
+  }
+}
