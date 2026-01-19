@@ -1,8 +1,8 @@
 let currentUser = null;
 let pollerId = null;
 let pendingTeamId = null;
-const RAZORPAY_KEY_ID = "rzp_test_S0etRYVS11gZ19";
-const RAZORPAY_PLAN_ID = "plan_S0x21VAJ3k5buj";
+const RAZORPAY_KEY_ID = "rzp_test_S3HHQ9F3z9Kxyh";
+const RAZORPAY_PLAN_ID = "plan_S3IG0yfEJEuvH3";
 
 document.addEventListener("DOMContentLoaded", async () => {
   currentUser = await checkAuth();
@@ -158,8 +158,7 @@ document
         .from("teams")
         .insert([
           {
-            name: teamName,
-            created_by: currentUser.id,
+            name: teamName
           },
         ])
         .select();
@@ -167,21 +166,19 @@ document
       if (error) throw error;
 
       if (data && data[0]) {
-        await supabase
-          .from("team_members")
-          .update({ payment_status: "paid" })
-          .eq("team_id", data[0].id)
-          .eq("user_id", currentUser.id);
-
+        if (pollerId) clearInterval(pollerId);
         $("#createTeamModal").modal("hide");
         showToast("Team created successfully", "success");
-
         document.getElementById("team-name").value = "";
         setTimeout(() => enterTeam(data[0].id, "admin"), 500);
       }
     } catch (error) {
-      console.error("Error creating team:", error);
-      showToast("Error creating team: " + error.message, "error");
+      console.error("Error creating team (Detailed):", JSON.stringify(error, null, 2));
+      console.error(error);
+      showToast(
+        "Error creating team: " + (error.message || error.code || "Unknown Error"),
+        "error"
+      );
     }
   });
 
@@ -201,13 +198,13 @@ document
         {
           team_id: teamId,
           user_id: currentUser.id,
-          role: "member",
-          payment_status: "pending",
+          role: "member"
         },
       ]);
 
       if (error) throw error;
 
+      if (pollerId) clearInterval(pollerId);
       $("#joinTeamModal").modal("hide");
       showToast("Joined team successfully", "success");
 
@@ -252,7 +249,7 @@ async function enterTeam(teamId, knownRole = null) {
     if (!role) {
       const { data: member, error } = await supabase
         .from("team_members")
-        .select("role, payment_status")
+        .select("role")
         .eq("team_id", teamId)
         .eq("user_id", currentUser.id)
         .single();
@@ -260,19 +257,39 @@ async function enterTeam(teamId, knownRole = null) {
       if (error) throw error;
       if (member) {
         role = member.role;
-        if (member.payment_status === "pending") {
-          pendingTeamId = teamId;
-          $("#paymentModal").modal("show");
-          return;
-        }
       }
     }
 
+    const { data: subCheck, error: subError } = await supabase.functions.invoke('check-subscription', {
+      body: {
+        team_id: teamId,
+        user_id: currentUser.id 
+      }
+    });
+
+    console.log("Raw Sub Check Response:", subCheck); 
+
+    if (subError) {
+      console.error("Error checking subscription:", subError);
+      alert("Unable to verify subscription status.");
+      return;
+    }
+
+    console.log("Subscription Check:", subCheck, "Role:", role);
+
     if (role === "admin") {
       window.location.href = `admin_dashboard.html?teamId=${teamId}`;
-    } else {
-      window.location.href = `team_dashboard.html?teamId=${teamId}`;
+      return;
     }
+
+    if ((!subCheck || !subCheck.active)) {
+      console.log("Blocking access: Subscription inactive.");
+      pendingTeamId = teamId;
+      $("#paymentModal").modal("show");
+      return;
+    }
+
+    window.location.href = `team_dashboard.html?teamId=${teamId}`;
   } catch (error) {
     if (error.code === "PGRST116") {
       console.warn(
@@ -324,37 +341,10 @@ document.getElementById("pay-now-btn").addEventListener("click", async () => {
     name: "Team Task Manager",
     description: "Monthly Subscription (₹5/month)",
     image: "https://cdn-icons-png.flaticon.com/512/476/476863.png",
-    handler: async function (response) {
+    handler: function (response) {
       console.log("Subscription Success:", response);
-      showToast("Subscription Active! Verifying...", "info");
-
-      try {
-        const { error } = await supabase
-          .from("team_members")
-          .update({
-            payment_status: "paid",
-            subscription_id: response.razorpay_subscription_id,
-            plan_id: RAZORPAY_PLAN_ID,
-            payment_method: "razorpay_subscription_edge",
-          })
-          .eq("team_id", pendingTeamId)
-          .eq("user_id", currentUser.id);
-
-        if (error) throw error;
-
-        $("#paymentModal").modal("hide");
-        showToast("Welcome to the team!", "success");
-        enterTeam(pendingTeamId);
-      } catch (err) {
-        console.error("Error updating payment status:", err);
-        showToast(
-          "Subscription active but update failed. Contact support.",
-          "error"
-        );
-      } finally {
-        payBtn.textContent = originalText;
-        payBtn.disabled = false;
-      }
+      showToast("Payment received. Activating subscription...", "info");
+      setTimeout(() => enterTeam(pendingTeamId), 5000); 
     },
     prefill: {
       name: currentUser?.user_metadata?.full_name || "",
@@ -381,7 +371,13 @@ async function createSubscriptionViaEdgeFunction(planId) {
     const { data, error } = await supabase.functions.invoke(
       "create-subscription",
       {
-        body: { plan_id: planId },
+        body: {
+          plan_id: planId,
+          team_id: pendingTeamId,
+          user_id: currentUser.id,
+          email: currentUser?.email,
+          name: currentUser?.user_metadata?.full_name
+        },
       }
     );
 

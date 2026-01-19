@@ -13,21 +13,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-  // Check membership and payment status
   const { data: member, error: memberError } = await supabase
     .from("team_members")
-    .select("role, payment_status")
+    .select("role")
     .eq("team_id", currentTeamId)
     .eq("user_id", currentUser.id)
     .single();
 
   if (memberError || !member) {
-    window.location.href = "lobby.html";
-    return;
-  }
-
-  if (member.payment_status === 'pending') {
-    alert("Payment required to access this team. Please complete payment in the lobby.");
     window.location.href = "lobby.html";
     return;
   }
@@ -68,7 +61,7 @@ async function loadAdminViewButton() {
 }
 
 function updateSidebarLinks() {
-  const links = ["nav-dashboard", "nav-tasks", "nav-members", "nav-brand"];
+  const links = ["nav-dashboard", "nav-tasks", "nav-members", "nav-subscription", "nav-brand"];
   links.forEach((id) => {
     const el = document.getElementById(id);
     if (el) {

@@ -117,7 +117,7 @@ function updateUserInterface() {
 }
 
 function updateSidebarLinks() {
-  const links = ["nav-dashboard", "nav-tasks", "nav-members", "nav-brand"];
+  const links = ["nav-dashboard", "nav-tasks", "nav-members", "nav-payments", "nav-brand"];
   links.forEach((id) => {
     const el = document.getElementById(id);
     if (el) {
@@ -170,9 +170,8 @@ async function loadMembers() {
                     </div>
                 </td>
                 <td>${email}</td>
-                <td><span class="label label-${
-                  m.role === "admin" ? "primary" : "default"
-                }">${m.role}</span></td>
+                <td><span class="label label-${m.role === "admin" ? "primary" : "info"
+        }">${m.role}</span></td>
                 <td>${new Date(m.joined_at).toLocaleDateString()}</td>
                 <td>${taskCount}</td>
                 <td>
@@ -338,7 +337,7 @@ window.removeMember = async function (uid) {
 
     const sel = document.getElementById("reassign-select");
     sel.innerHTML =
-      '<option value="">-- Unassign (Set to Unassigned) --</option>'; // Add Unassign option
+      '<option value="">-- Unassign (Set to Unassigned) --</option>';
 
     const { data: others } = await supabase
       .from("team_members")

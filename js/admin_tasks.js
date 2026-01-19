@@ -112,7 +112,7 @@ function updateUserInterface() {
 }
 
 function updateSidebarLinks() {
-  const links = ["nav-dashboard", "nav-tasks", "nav-members", "nav-brand"];
+  const links = ["nav-dashboard", "nav-tasks", "nav-members", "nav-payments", "nav-brand"];
   links.forEach((id) => {
     const el = document.getElementById(id);
     if (el) {
@@ -219,22 +219,18 @@ function renderListView(tasks) {
             <td><strong>${task.title}</strong></td>
             <td><small>${task.description || ""}</small></td>
             <td>${assigneeName}</td>
-            <td><span class="label label-${getStatusColor(task.status)}">${
-      task.status
-    }</span></td>
-            <td><span class="badge mb-0">${
-              task.priority || "medium"
-            }</span></td>
-            <td>${
-              task.due_date ? new Date(task.due_date).toLocaleDateString() : "-"
-            }</td>
+            <td><span class="label label-${getStatusColor(task.status)}">${task.status
+      }</span></td>
+            <td><span class="badge mb-0">${task.priority || "medium"
+      }</span></td>
+            <td>${task.due_date ? new Date(task.due_date).toLocaleDateString() : "-"
+      }</td>
             <td>
                 <button class="btn btn-xs btn-default" onclick='openEditTaskModal(${JSON.stringify(
-                  task
-                ).replace(/'/g, "&#39;")})'>Edit</button>
-                <button class="btn btn-xs btn-danger" onclick="deleteTask('${
-                  task.id
-                }')">Delete</button>
+        task
+      ).replace(/'/g, "&#39;")})'>Edit</button>
+                <button class="btn btn-xs btn-danger" onclick="deleteTask('${task.id
+      }')">Delete</button>
             </td>
         `;
     tbody.appendChild(tr);
@@ -373,8 +369,7 @@ function setupListeners() {
       } catch (error) {
         console.error("Create Task Exception:", error);
         alert(
-          `Error creating task: ${
-            error.message || error.code || "Unknown error"
+          `Error creating task: ${error.message || error.code || "Unknown error"
           }\nDetails: ${error.details || ""}`
         );
         showToast(`Error: ${error.message}`, "error");

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Subscription | Team Member</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="css/team_dashboard.css" />
+    <link rel="stylesheet" href="css/toast.css" />
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-main navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="team_dashboard.html" id="nav-brand">
+                    <i class="fa fa-tasks"></i>
+                    <span id="team-title">Team Member</span>
+                </a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <div class="user-dropdown">
+                            <div class="user-avatar" id="user-avatar">U</div>
+                            <div class="user-info" id="user-info">Member</div>
+                        </div>
+                    </li>
+                    <li>
+                        <button class="logout-btn" onclick="logout()">
+                            <i class="fa fa-sign-out"></i> Logout
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Admin Layout with Sidebar -->
+    <div class="container-fluid admin-dashboard-container">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-sm-3 col-md-2 admin-sidebar">
+                <div class="sidebar-header">
+                    <h3><i class="fa fa-user"></i> Member Panel</h3>
+                </div>
+
+                <ul class="nav nav-sidebar">
+                    <li>
+                        <a href="team_dashboard.html" id="nav-dashboard"><i class="fa fa-dashboard"></i> Dashboard</a>
+                    </li>
+                    <li>
+                        <a href="team_tasks.html" id="nav-tasks"><i class="fa fa-tasks"></i> My Tasks</a>
+                    </li>
+                    <li>
+                        <a href="team_members.html" id="nav-members"><i class="fa fa-users"></i> Team</a>
+                    </li>
+                    <li class="active">
+                        <a href="team_subscription.html" id="nav-subscription"><i class="fa fa-credit-card"></i>
+                            Subscription</a>
+                    </li>
+                </ul>
+
+                <div class="sidebar-footer">
+                    <a href="lobby.html" class="btn-back-to-lobby">
+                        <i class="fa fa-home"></i> Back to Lobby
+                    </a>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 admin-main-content">
+                <div class="dashboard-header">
+                    <h1 class="page-title">
+                        <i class="fa fa-credit-card"></i> Team Subscription
+                    </h1>
+                    <p class="page-subtitle">Current plan status for this team</p>
+                </div>
+
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Current Plan Status</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul class="list-group">
+
+                            <li class="list-group-item"><strong>Name:</strong> <span id="mem-name">Loading...</span>
+                            </li>
+                            <li class="list-group-item"><strong>Email:</strong> <span id="mem-email">Loading...</span>
+                            </li>
+                            <li class="list-group-item"><strong>Joined Date:</strong> <span
+                                    id="mem-joined">Loading...</span></li>
+                            <li class="list-group-item"><strong>Subscription Started:</strong> <span
+                                    id="sub-started">Loading...</span></li>
+                            <li class="list-group-item"><strong>Last Payment Date:</strong> <span
+                                    id="last-paid">Loading...</span></li>
+                            <li class="list-group-item"><strong>Due Date:</strong> <span
+                                    id="payment-due">Loading...</span></li>
+                            <li class="list-group-item"><strong>Status:</strong> <span
+                                    id="current-status">Loading...</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/team_subscription.js"></script>
+</body>
+
+</html>

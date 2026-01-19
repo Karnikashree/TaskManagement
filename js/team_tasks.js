@@ -60,7 +60,7 @@ function updateUserInterface() {
 }
 
 function updateSidebarLinks() {
-  const links = ["nav-dashboard", "nav-tasks", "nav-members", "nav-brand"];
+  const links = ["nav-dashboard", "nav-tasks", "nav-members", "nav-subscription", "nav-brand"];
   links.forEach((id) => {
     const el = document.getElementById(id);
     if (el) {
@@ -176,14 +176,12 @@ function renderTaskTable(tasks, tbodyId, showAssignee) {
             <td><small>${task.description || ""}</small></td>
             ${assigneeCell}
             <td data-field="status"><span class="label label-${getStatusColor(
-              task.status
-            )}">${task.status}</span></td>
-            <td data-field="priority"><span class="badge mb-0 priority-${
-              task.priority || "medium"
-            }">${task.priority || "medium"}</span></td>
-            <td>${
-              task.due_date ? new Date(task.due_date).toLocaleDateString() : "-"
-            }</td>
+      task.status
+    )}">${task.status}</span></td>
+            <td data-field="priority"><span class="badge mb-0 priority-${task.priority || "medium"
+      }">${task.priority || "medium"}</span></td>
+            <td>${task.due_date ? new Date(task.due_date).toLocaleDateString() : "-"
+      }</td>
             ${actionsCell}
         `;
     tbody.appendChild(tr);
@@ -239,15 +237,12 @@ window.enableInlineEdit = function (taskId) {
   const statusCell = row.children[2];
   statusCell.innerHTML = `
         <select class="form-control" id="edit-status-${taskId}" style="height: 30px; padding: 0 5px; font-size: 12px; width: 100%;">
-            <option value="pending" ${
-              task.status === "pending" ? "selected" : ""
-            }>Pending</option>
-            <option value="in-progress" ${
-              task.status === "in-progress" ? "selected" : ""
-            }>In Progress</option>
-            <option value="completed" ${
-              task.status === "completed" ? "selected" : ""
-            }>Completed</option>
+            <option value="pending" ${task.status === "pending" ? "selected" : ""
+    }>Pending</option>
+            <option value="in-progress" ${task.status === "in-progress" ? "selected" : ""
+    }>In Progress</option>
+            <option value="completed" ${task.status === "completed" ? "selected" : ""
+    }>Completed</option>
         </select>
     `;
 

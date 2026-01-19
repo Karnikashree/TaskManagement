@@ -97,7 +97,7 @@ function loadMemberViewButton() {
 }
 
 function updateSidebarLinks() {
-  const links = ["nav-dashboard", "nav-tasks", "nav-members", "nav-brand"];
+  const links = ["nav-dashboard", "nav-tasks", "nav-members", "nav-payments", "nav-brand"];
   links.forEach((id) => {
     const el = document.getElementById(id);
     if (el) {
